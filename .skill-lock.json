@@ -559,6 +559,54 @@
       "skillFolderHash": "81d7303540b87446dd012615c7b13cda19c92f43",
       "installedAt": "2026-10-18T12:37:09.312Z",
       "updatedAt": "2026-10-18T12:37:09.312Z"
+    },
+    "control-cli": {
+      "source": "cursor/plugins",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/cursor/plugins.git",
+      "ref": "main",
+      "skillPath": "cursor-team-kit/skills/control-cli/SKILL.md",
+      "skillFolderHash": "21f3eee2663ae7c78464bfc2a69f6a8cc6c4f7ed",
+      "installedAt": "2026-10-18T12:39:25.316Z",
+      "updatedAt": "2026-10-18T12:39:25.316Z"
+    },
+    "control-ui": {
+      "source": "cursor/plugins",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/cursor/plugins.git",
+      "ref": "main",
+      "skillPath": "cursor-team-kit/skills/control-ui/SKILL.md",
+      "skillFolderHash": "797e6d20a029b2ae757a97951278d308f3b53026",
+      "installedAt": "2026-10-18T12:39:25.317Z",
+      "updatedAt": "2026-10-18T12:39:25.317Z"
+    },
+    "deslop": {
+      "source": "cursor/plugins",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/cursor/plugins.git",
+      "ref": "main",
+      "skillPath": "cursor-team-kit/skills/deslop/SKILL.md",
+      "skillFolderHash": "ac9ba043f9dd3b3a8850de6624ec5bc12e375599",
+      "installedAt": "2026-10-18T12:39:25.317Z",
+      "updatedAt": "2026-10-18T12:39:25.317Z"
+    },
+    "better-accessibility": {
+      "source": "jakubkrehel/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/jakubkrehel/skills.git",
+      "skillPath": "skills/better-accessibility/SKILL.md",
+      "skillFolderHash": "8fdb2f25f822c2ffaca438e2d325eed9ac6e9b9b",
+      "installedAt": "2026-10-18T12:39:29.515Z",
+      "updatedAt": "2026-10-18T12:39:29.515Z"
+    },
+    "better-typography": {
+      "source": "jakubkrehel/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/jakubkrehel/skills.git",
+      "skillPath": "skills/better-typography/SKILL.md",
+      "skillFolderHash": "25751e782efef061becc8922bb31e378d57fc7b8",
+      "installedAt": "2026-10-18T12:39:29.516Z",
+      "updatedAt": "2026-10-18T12:39:29.516Z"
     }
   },
   "dismissed": {

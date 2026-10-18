@@ -28,6 +28,13 @@ for target in "${TARGETS[@]}"; do
   find -L "$target" -mindepth 1 -maxdepth 1 -type l -delete 2>/dev/null || true
 done
 
+# pstack's model config lives at ~/.agents/rules/pstack-models.md; link it into
+# ~/.cursor/rules/ so Cursor also auto-applies it (.mdc = alwaysApply rule).
+if [ -f "$HOME/.agents/rules/pstack-models.md" ]; then
+  mkdir -p "$HOME/.cursor/rules"
+  ln -sfn "$HOME/.agents/rules/pstack-models.md" "$HOME/.cursor/rules/pstack-models.mdc"
+fi
+
 # Cursor local plugins are rejected when symlinked from outside plugins/local,
 # so vendored plugins are copied instead of linked.
 if [ -d "$HOME/.agents/plugins" ]; then

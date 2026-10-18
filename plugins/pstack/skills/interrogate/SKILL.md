@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # Interrogate
 
+In Claude Code, read the adapter at `~/.agents/plugins/pstack/docs/harness/claude-code.md` once per session — it maps the harness names used in these skills to Claude Code equivalents.
+
 Spawn one reviewer per configured model to adversarially review code changes. The adversarial signal comes from model diversity, not assigned personas. The deliverable is a synthesized verdict. Do NOT auto-apply changes.
 
 ## Step 1, Scope
@@ -24,7 +26,7 @@ Before spawning reviewers, state the intent in one clear paragraph from the user
 
 ## Step 3, Spawn Reviewers
 
-Launch all reviewers in a single message with the Task tool, one per entry on the `interrogate reviewers` line in `~/.cursor/rules/pstack-models.mdc`, labeled Reviewer A, B, and so on to match the entry count. If the rule or that line is missing, use the table defaults.
+Launch all reviewers in a single message with the Task tool, one per entry on the `interrogate reviewers` line in `~/.agents/rules/pstack-models.md`, labeled Reviewer A, B, and so on to match the entry count. If the rule or that line is missing, use the table defaults.
 
 | Subagent | Default model |
 |----------|---------------|

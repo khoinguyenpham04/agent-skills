@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # Technical writing
 
+In Claude Code, read the adapter at `~/.agents/plugins/pstack/docs/harness/claude-code.md` once per session — it maps the harness names used in these skills to Claude Code equivalents.
+
 Write so a tired engineer understands on the first read. Apply all four layers.
 
 Three rules sit above the layers:

@@ -61,9 +61,14 @@ elif raw=$(gh pr list --author "@me" --state all --limit 1000 \
 fi
 [ -s "$prs" ] || echo "[]" > "$prs"
 
-# Transcripts dir: ~/.cursor/projects/<slugified-repo-path>/agent-transcripts.
+# Transcript dir layout depends on the harness:
+#   Cursor:      ~/.cursor/projects/<slugified-repo-path>/agent-transcripts
+#   Claude Code: ~/.claude/projects/<slugified-repo-path>
 slug=$(printf '%s' "$main_wt" | sed 's#^/##; s#/#-#g')
-transcripts="$HOME/.cursor/projects/$slug/agent-transcripts"
+transcripts=""
+for cand in "$HOME/.cursor/projects/$slug/agent-transcripts" "$HOME/.claude/projects/$slug"; do
+	if [ -d "$cand" ]; then transcripts="$cand"; break; fi
+done
 now=$(date +%s)
 
 echo "# base: $base"

@@ -6,9 +6,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/vercel-labs/skills.git",
       "skillPath": "skills/find-skills/SKILL.md",
-      "skillFolderHash": "c2f31172b6f256272305a5e6e7228b258446899f",
-      "installedAt": "2026-01-29T11:40:17.892Z",
-      "updatedAt": "2026-02-04T10:20:23.024Z"
+      "skillFolderHash": "eb6a23305aea6e340d14b9de3766e721f9f4861b",
+      "installedAt": "2026-06-26T09:17:05.192Z",
+      "updatedAt": "2026-06-26T09:17:05.192Z"
     },
     "frontend-design": {
       "source": "anthropics/skills",
@@ -175,9 +175,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
       "skillPath": "skills/react-best-practices/SKILL.md",
-      "skillFolderHash": "079b06a135401704ea94ab74c7c9d86c92ba259f",
-      "installedAt": "2026-01-24T17:43:12.206Z",
-      "updatedAt": "2026-01-29T11:40:12.829Z"
+      "skillFolderHash": "343db72180d05814949fef7d46be96b5c6ee86b3",
+      "installedAt": "2026-06-26T09:18:33.024Z",
+      "updatedAt": "2026-06-26T09:18:33.024Z"
     },
     "emil-design-eng": {
       "source": "emilkowalski/skill",

@@ -1,0 +1,178 @@
+{
+	"theme": "dark",
+	"layout": "landscape",
+	"seedPrefix": "emdash-1-1",
+	"cards": [
+		{
+			"name": "01-release",
+			"variant": "cover",
+			"eyebrow": "October 2, 2026",
+			"title": "EmDash 1.1",
+			"dek": "Publishing calendar, richer embeds and faster sites.",
+			"art": { "seed": "emdash-1-1" }
+		},
+		{
+			"name": "02-calendar",
+			"eyebrow": "New in EmDash 1.1",
+			"title": "Publishing calendar",
+			"dek": "Published and scheduled entries across every collection and locale, by month or by day.",
+			"art": { "name": "calendar", "motif": "ripple", "accent": [636, 44] },
+			"frame": [
+				{
+					"type": "screenshot",
+					"src": "screenshots/calendar-busy-day.png",
+					"crop": { "x": 609, "y": 288, "w": 653, "h": 592 },
+					"scale": 0.9,
+					"left": 40,
+					"top": 40
+				}
+			]
+		},
+		{
+			"name": "03-html-blocks",
+			"eyebrow": "New in EmDash 1.1",
+			"title": "HTML, CSS and JS blocks",
+			"dek": "New blocks render in an isolated iframe, so their scripts can’t reach your site’s cookies or storage.",
+			"art": { "name": "html", "motif": "ripple", "accent": [56, 534] },
+			"frame": [
+				{ "type": "screenshot", "src": "screenshots/html-code.png", "scale": 0.9, "left": 30, "top": 34 },
+				{
+					"type": "screenshot",
+					"src": "screenshots/html-preview.png",
+					"crop": { "x": 0, "y": 48, "w": 602, "h": 218 },
+					"scale": 0.9,
+					"left": 114,
+					"top": 304,
+					"z": 2
+				}
+			]
+		},
+		{
+			"name": "04-iframe-blocks",
+			"eyebrow": "New in EmDash 1.1",
+			"title": "iFrame blocks",
+			"dek": "Type /iframe and paste an embed code or a URL. YouTube and Vimeo links become players.",
+			"art": { "name": "iframe", "motif": "waves", "accent": [600, 56] },
+			"frame": [{ "type": "screenshot", "src": "screenshots/iframe-preview.png", "scale": 1.06, "left": 24, "top": 118 }]
+		},
+		{
+			"name": "05-images",
+			"eyebrow": "New in EmDash 1.1",
+			"title": "Drop, paste and caption",
+			"dek": "Drop or paste images straight into the editor, then edit them from one toolbar.",
+			"art": { "name": "images", "motif": "lines", "accent": [44, 330], "zoom": 1.8 },
+			"frame": [
+				{
+					"type": "screenshot",
+					"src": "screenshots/image-toolbar.png",
+					"crop": { "x": 0, "y": 8, "w": 522, "h": 428 },
+					"scale": 1.05,
+					"left": 88,
+					"top": 72,
+					"masks": [
+						{ "x": 0, "y": 0, "w": 522, "h": 25.5 },
+						{ "x": 0, "y": 25.5, "w": 35, "h": 42.5 },
+						{ "x": 0, "y": 432, "w": 522, "h": 14 }
+					]
+				}
+			]
+		},
+		{
+			"name": "06-microsoft-sign-in",
+			"eyebrow": "New in EmDash 1.1",
+			"title": "Sign in with Microsoft",
+			"dek": "Work and school accounts through Microsoft Entra ID.",
+			"art": { "name": "entra", "motif": "ripple", "accent": [600, 548] },
+			"frame": [
+				{
+					"type": "code",
+					"file": "astro.config.mjs",
+					"left": 30,
+					"top": 36,
+					"width": 574,
+					"code": [
+						"import { defineConfig } from \"astro/config\";",
+						"import emdash from \"emdash/astro\";",
+						"import { microsoft } from \"emdash/auth/providers/microsoft\";",
+						"",
+						"export default defineConfig({",
+						"  integrations: [emdash({ authProviders: [microsoft()] })],",
+						"});"
+					]
+				},
+				{
+					"type": "code",
+					"file": ".env",
+					"left": 82,
+					"top": 318,
+					"width": 574,
+					"z": 2,
+					"code": [
+						"EMDASH_OAUTH_MICROSOFT_CLIENT_ID=…",
+						"EMDASH_OAUTH_MICROSOFT_CLIENT_SECRET=…",
+						"EMDASH_OAUTH_MICROSOFT_TENANT_ID=…"
+					]
+				}
+			]
+		},
+		{
+			"name": "07-webmcp-search",
+			"eyebrow": "Experimental",
+			"title": "Search for browser agents",
+			"dek": "A read-only search_site tool for browsers that support WebMCP.",
+			"art": { "name": "webmcp", "motif": "waves", "accent": [600, 540] },
+			"frame": [
+				{
+					"type": "code",
+					"file": "src/layouts/Base.astro",
+					"left": 30,
+					"top": 40,
+					"width": 574,
+					"code": [
+						"---",
+						"import WebMcpSearch from \"emdash/ui/webmcp-search\";",
+						"---",
+						"",
+						"<WebMcpSearch",
+						"  collections={[\"posts\", \"pages\"]}",
+						"  routeMap={{ posts: \"/blog/:slug\" }}",
+						"/>"
+					]
+				},
+				{
+					"type": "code",
+					"file": "search_site (example)",
+					"left": 82,
+					"top": 338,
+					"width": 574,
+					"z": 2,
+					"code": [
+						"{ \"query\": \"getting started\" }",
+						"→ [{ \"title\": \"Getting started\", \"url\": \"https://…\",",
+						"     \"collection\": \"posts\", \"excerpt\": \"…\" }]"
+					]
+				}
+			]
+		},
+		{
+			"name": "08-faster-sites",
+			"eyebrow": "Also in EmDash 1.1",
+			"title": "Faster, sturdier sites",
+			"dek": "Fixes that matter most on bigger, longer-running sites.",
+			"art": { "name": "reliability", "motif": "waves", "accent": [520, 556] },
+			"frame": [
+				{
+					"type": "list",
+					"center": true,
+					"width": 606,
+					"items": [
+						["Redirects", "Matched in one query instead of reloading the whole table"],
+						["Menus", "Load with all their items in one query"],
+						["Image endpoint", "No longer waits for a full runtime start on cold isolates"],
+						["Pagination", "No skipped entries when sorting by fields that can be empty"]
+					]
+				}
+			]
+		}
+	]
+}

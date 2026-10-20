@@ -1,0 +1,23 @@
+{
+	"skill_name": "emdash-social-posts",
+	"evals": [
+		{
+			"id": 1,
+			"prompt": "the video block PR (emdash-cms/emdash#3827) just merged, can you make me a quick X post about it from my personal account? i'm a core maintainer and i built it. one image please",
+			"expected_output": "Asks only what's missing (free or Premium account, dark or light card), verifies the feature from the PR, writes one first-person post that discloses the author built it, renders one landscape card from a real screenshot, lints the post, and delivers a social-<slug>/ folder with the card and a thread file.",
+			"files": []
+		},
+		{
+			"id": 2,
+			"prompt": "Turn the EmDash 1.1 release into a Bluesky thread for the official account, plus a LinkedIn post for me (core maintainer). Reuse the 1.1 cards if they fit.",
+			"expected_output": "Writes a brand-voice Bluesky thread under 300 characters per post and a single first-person LinkedIn post with the hook in the first ~210 characters, no emojis or colon constructions, link last, separate thread files per account, both linted with the matching --platform.",
+			"files": []
+		},
+		{
+			"id": 3,
+			"prompt": "Daniel built the Microsoft Entra sign-in for 1.1. Write a short post he can share from his own account, and a shout-out from @emdashcms that credits him.",
+			"expected_output": "Asks for Daniel's handle on the target platform instead of guessing it, writes a contributor-voice post (EmDash 1.1 shipped, thanks to the maintainers) and a brand shout-out, with different wording, reusing the Microsoft sign-in card.",
+			"files": []
+		}
+	]
+}

@@ -316,15 +316,6 @@
       "installedAt": "2026-07-09T13:22:29.668Z",
       "updatedAt": "2026-07-09T13:22:29.668Z"
     },
-    "impeccable": {
-      "source": "pbakaus/impeccable",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/pbakaus/impeccable.git",
-      "skillPath": ".agents/skills/impeccable/SKILL.md",
-      "skillFolderHash": "f9a777d4862fac862cedf09fb5468cab4145916d",
-      "installedAt": "2026-07-09T17:09:31.999Z",
-      "updatedAt": "2026-07-09T17:09:31.999Z"
-    },
     "kumo-design": {
       "source": "cloudflare/kumo",
       "sourceType": "github",

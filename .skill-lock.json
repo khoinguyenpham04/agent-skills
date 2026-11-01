@@ -378,6 +378,15 @@
       "skillFolderHash": "3116f3e62dbd02b44a598b1aa690d2a8938e8f89",
       "installedAt": "2026-03-09T17:43:42.848Z",
       "updatedAt": "2026-03-09T17:43:42.848Z"
+    },
+    "stageshow": {
+      "source": "benjitaylor/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/benjitaylor/skills.git",
+      "skillPath": "stageshow/SKILL.md",
+      "skillFolderHash": "5f24a58c1b28ba9d208e576e3c6267ccd1fc1769",
+      "installedAt": "2026-11-01T20:58:44.419Z",
+      "updatedAt": "2026-11-01T20:58:44.419Z"
     }
   }
 }

@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grain × Halftone · EmDash cover explorations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&display=swap">
+<link rel="stylesheet" href="canvas.css">
+<style>
+/* ---------- Anatomy: exploded stack ---------- */
+.xwrap { display: grid; grid-template-columns: 360px 1fr; align-items: center; gap: 12px; }
+.xstack { height: 470px; display: grid; place-items: center; perspective: 2000px; }
+.xscene { position: relative; width: 250px; height: 250px; transform: rotateX(58deg) rotateZ(-42deg) translateZ(-90px); transform-style: preserve-3d; }
+.xlayer { position: absolute; inset: 0; border-radius: 16px; transform: translateZ(calc(var(--i) * var(--gap, 46px))); transition: transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1); }
+.xstack:hover .xlayer { --gap: 74px; }
+.xlayer > .gc { position: absolute; inset: 0; width: 100%; height: 100%; aspect-ratio: auto; }
+.xlayer.is-plane { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 16%, transparent); }
+.xlayer.is-glass { background: rgba(58, 20, 8, 0.56); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.45); }
+.xgrain { position: absolute; inset: 0; border-radius: 16px; background-image: var(--grain-url); background-size: 48px 48px; image-rendering: pixelated; opacity: 0.55; }
+.xlegend { list-style: none; display: flex; flex-direction: column; gap: 18px; counter-reset: x 6; }
+.xlegend li { counter-increment: x -1; display: grid; grid-template-columns: 30px 1fr; font-size: 14px; line-height: 1.45; color: var(--muted); }
+.xlegend li::before { content: counter(x); font: 600 13px/1.6 var(--mono); color: var(--subtle); }
+.xlegend b { display: block; color: var(--ink); font-weight: 600; }
+.buildup { display: flex; align-items: center; gap: 12px; }
+.buildup .arrow { color: var(--subtle); font-size: 18px; margin-top: -26px; }
+
+/* ---------- Grain: banding and loupes ---------- */
+.band { display: flex; flex-direction: column; gap: 14px; }
+.band canvas { display: block; width: 520px; height: 72px; border-radius: 12px; box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.2); }
+.band-label { display: flex; justify-content: space-between; margin-bottom: 7px; font-size: 13px; color: var(--muted); }
+.band-label b { color: var(--ink); font-weight: 600; }
+.loupes { display: flex; gap: 22px; }
+.loupes canvas { display: block; width: 200px; height: 200px; image-rendering: pixelated; border-radius: 50%; box-shadow: 0 0 0 4px var(--surface), 0 0 0 5px var(--line), 0 14px 30px -18px rgba(0, 0, 0, 0.4); }
+
+/* ---------- Color: the logo ramp ---------- */
+.ramp-row { display: flex; align-items: center; gap: 28px; }
+.ramp-mark { width: 92px; height: 92px; flex: 0 0 auto; }
+.ramp { position: relative; width: 760px; }
+.ramp-stops { display: grid; grid-template-columns: repeat(11, 1fr); margin-top: 10px; }
+.ramp-stops span { position: relative; font: 500 10.5px/1 var(--mono); color: var(--subtle); text-align: center; padding-top: 10px; }
+.ramp-stops span::before { content: ""; position: absolute; top: 0; left: 50%; width: 1px; height: 6px; background: color-mix(in srgb, var(--ink) 25%, transparent); }
+.brackets { position: relative; height: 120px; margin-top: 16px; }
+.bracket { position: absolute; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 12.5px; font-weight: 600; color: var(--ink); }
+.bracket::before { content: ""; position: absolute; inset: 0 0 auto; height: 8px; border: 1.5px solid color-mix(in srgb, var(--ink) 30%, transparent); border-top: 0; border-radius: 0 0 6px 6px; }
+.bracket span { margin-top: 22px; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.bracket i { width: 10px; height: 10px; border-radius: 50%; background: var(--sw); box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.2); }
+
+/* ---------- Halftone: twins ---------- */
+.twins { display: grid; grid-template-columns: repeat(5, auto); gap: 26px; }
+.twin { display: flex; flex-direction: column; }
+.twin-pair { display: flex; align-items: center; gap: 8px; }
+.twin-pair .sep { color: var(--subtle); font-size: 15px; }
+
+/* ---------- Blog: share cards ---------- */
+.og-board .gc { box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06), 0 22px 40px -28px rgba(0, 0, 0, 0.45); }
+
+/* ---------- Motion ---------- */
+.lanes { display: flex; flex-direction: column; gap: 14px; width: 420px; }
+.lane { display: grid; grid-template-columns: 64px 1fr 60px; align-items: center; gap: 12px; font-size: 13px; color: var(--muted); }
+.lane b { font: 600 12.5px var(--mono); color: var(--ink); text-align: right; }
+.lane-track { position: relative; height: 8px; background: color-mix(in srgb, var(--ink) 7%, transparent); border-radius: 99px; overflow: hidden; }
+.lane-track i { position: absolute; inset: 0; background: var(--sw); border-radius: inherit; box-shadow: inset 0 0 0 0.5px var(--card-edge); transform-origin: 0 50%; animation: lane var(--dur) linear infinite; }
+@keyframes lane { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+body.no-motion .lane-track i { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: reduce) {
+	.lane-track i { animation: none !important; }
+	.xlayer { transition: none !important; }
+}
+</style>
+</head>
+<body>
+<script src="halftone.js"></script>
+<script src="canvas.js"></script>
+<script>
+const {
+	mount, C, board, fig, grid, row, stack, prose, code, seg, swatches, esc, siteTheme,
+	PALETTES, RAMP, MOTIFS, motifOf, seedFor, paperCover, rng, mark, MARK_WHITE, ARROW,
+} = ExplorationCanvas;
+
+/* ==========================================================================
+   Content
+   ========================================================================== */
+const POSTS = [
+	{ slug: "emdash-1-3", name: "EmDash 1.3", title: "EmDash 1.3: readable revision history and a better inline editor", date: "Oct 15, 2026", min: 14, author: "Matt Kane", tag: "Changelog", palette: "heat", short: "Readable revision\nhistory", ver: "1.3",
+		excerpt: "See exactly what changed in each saved version, edit on the page with the admin's toolbar and image picker, ask AI crawlers not to train on your site, and get faster pages on Cloudflare D1." },
+	{ slug: "how-emdash-uses-clef-to-moderate-the-plugin-registry", name: "Clef moderation", title: "How EmDash uses Clef to moderate the plugin registry", date: "Oct 7, 2026", min: 3, author: "Scott Buscemi", tag: "Engineering", palette: "tide", short: "Moderating the\nplugin registry",
+		excerpt: "Every plugin listing in the EmDash registry is now screened by Cloudflare's Clef decision model. Here's how one fast, multimodal model helps catch phishing, impersonation, offensive content, and other abuse before a plugin appears in the catalog." },
+	{ slug: "emdash-1-2", name: "EmDash 1.2", title: "EmDash 1.2: a redesigned editor, video blocks and domain moves", date: "Oct 7, 2026", min: 15, author: "Matt Kane", tag: "Changelog", palette: "heat", short: "A redesigned\neditor", ver: "1.2",
+		excerpt: "Write in a redesigned editor, add video to rich text, page through long collections, move a site to a new domain from the admin, and upgrade sites with the new upgrade-emdash CLI." },
+	{ slug: "emdash-1-1", name: "EmDash 1.1", title: "EmDash 1.1: publishing calendar, richer embeds and faster sites", date: "Oct 2, 2026", min: 8, author: "Matt Kane", tag: "Changelog", palette: "kiln", short: "Publishing\ncalendar", ver: "1.1",
+		excerpt: "Plan scheduled content in the new publishing calendar, build richer Portable Text pages, add Microsoft sign-in and make public sites more reliable." },
+	{ slug: "emdash-plugin-registry", name: "Plugin registry", title: "Ship your plugin to the EmDash plugin registry", date: "Sep 28, 2026", min: 5, author: "Scott Buscemi", tag: "Plugins", palette: "moss", short: "Ship your plugin\nto the registry",
+		excerpt: "The EmDash plugin registry launches with 1.0. Here's how to scaffold a sandboxed plugin, publish it from your own Atmosphere account, and get it listed for EmDash sites." },
+	{ slug: "emdash-build", name: "EmDash Build", title: "EmDash Build: an open source AI site builder", date: "Sep 28, 2026", min: 3, author: "Noah Pham", tag: "AI", palette: "afterglow", short: "An open source\nAI site builder",
+		excerpt: "EmDash Build turns a prompt into a real Astro site with structured content, media, and an EmDash admin UI." },
+	{ slug: "emdash-1-0", name: "EmDash 1.0", title: "EmDash 1.0: an open source CMS for Astro", date: "Sep 28, 2026", min: 9, author: "Matt Kane", tag: "Announcement", palette: "dusk", short: "An open source\nCMS for Astro", ver: "1.0",
+		excerpt: "Announcing EmDash 1.0, a stable, free and open source CMS built on Astro." },
+	{ slug: "emdash-is-live", name: "EmDash is live", title: "EmDash is live", date: "Apr 28, 2026", min: 1, author: "Matt Kane", tag: "Announcement", palette: "sunset", short: "EmDash\nis live",
+		excerpt: "A quick look at what EmDash is, what shipped in the first public release, and where to go next." },
+];
+const initials = (name) => name.split(" ").map((w) => w[0]).join("");
+const shortTitle = (t) => t.replace(/^EmDash \d\.\d: /, "");
+
+const POST_EN = `
+<p><strong>ElevenLabs' gradient covers look premium because of one layer of grain.</strong></p>
+<p>Every ElevenLabs blog post comes with a square cover: a few blobs of color bleeding into each other, and one line of white text dead center.</p>
+<p>Everyone has made gradients, but the colors in this set are unusually easy to look at, like an out-of-focus film photo. Download a cover and zoom in, and the whole image is covered in fine grey grain.</p>
+<p>Take it apart and there are only three things.</p>
+<p>Color is four or five large blobs stacked on top of each other, their edges blurred until you can't make out a shape. The palette is light and cool at the top, dark and warm at the bottom, and only uses colors that sit next to each other on the color wheel: blue-grey into sand-yellow into orange-red, and green only ever paired with blue and yellow. On top of everything sits a layer of one-pixel grey noise. It's clearly visible in the light areas and almost invisible in the dark ones.</p>
+<p><strong>The noise matters most.</strong></p>
+<p>Computer-generated gradients are too clean. They look like plastic, and on some screens you see rings of banding. Sprinkle grain on top and the banding breaks up, and the image picks up the texture of paper and film. Light at the top and dark at the bottom mirrors the sky and the ground, which is why it feels natural.</p>
+<p>The macOS wallpapers of the last few years and the homepage backgrounds of a lot of AI products use this same recipe: blurred color blobs plus a layer of grain.</p>
+<p>My version recreates six of them. Five have a layer of fine white line patterns on top: rays, contours, sound-wave lines, a dot grid, and lenses.</p>
+<p>Hand it to AI: paste the text beside this into Claude or ChatGPT and you'll get something very close.</p>`;
+
+const PROMPT_EN = `Use HTML + CSS + Canvas to build a 3×2 wall of square cover cards. Each card has only two lines of white English text in the center, over a soft, grainy gradient background. No images.
+
+1. Cards have a 20px corner radius and a faint 0.5px black inner stroke. Text is Inter 400, sized at 8% of the card width, centered.
+2. For the background, first lay down a top-to-bottom linear gradient: light and cool at the top, dark and warm at the bottom. Then layer 4 large radial-gradient color blobs with fading edges, spread across the corners and edges. Use only colors that are adjacent on the color wheel, one set per card: violet-pink to orange-gold, grey-blue to deep brown, mist blue to deep-sea blue, mist blue to ink green, lavender to midnight purple, sky grey to rust red.
+3. Use canvas to generate 128×128 grayscale random noise and tile it over the whole card with mix-blend-mode: overlay at 0.4 opacity. Size it by devicePixelRatio so one grain of noise maps to one physical pixel.
+4. Five of the cards get a layer of fine white SVG line patterns: rays, concentric contours, sound-wave lines, a dot grid, and lenses. Line width 0.8px, opacity around 0.3, with a radial mask that leaves the center clear for the text.
+5. Use CSS animation to make the blobs drift slowly and scale slightly over 20–28 seconds. On hover, the blobs shift toward the cursor, the pattern shifts slightly the opposite way, and a soft glow fades in at the cursor. When the cursor leaves, everything returns to rest. Drive the offsets with a spring (stiffness 70, damping ratio 0.86) so the start and the stop are both smooth.
+6. When prefers-reduced-motion is on, turn off all motion.
+
+Output a single standalone HTML file with no external libraries.`;
+
+const PROMPT_EMDASH = `Use HTML + CSS + Canvas to build grainy gradient blog covers for EmDash, an open source CMS built on Astro. No images.
+
+1. Color: take each cover's colors from the EmDash logo gradient, #0F006B #281A81 #5D0C83 #911475 #CE2F55 #FF6633 #F6821F #FBAD41 #FFCD89 #FFE9CB #FFF7EC, using 3–4 neighbouring stops per cover. Start from a pale, slightly cool fog at the top and end dark and warm at the bottom. Brand orange #FF5E1F is the only accent.
+2. Background: a top-to-bottom linear base gradient plus 4 large radial-gradient blobs with fully blurred edges, spread across the corners and edges.
+3. Grain: a 128×128 canvas tile of grayscale Gaussian noise centred on mid-grey, with a spread of about 12% of the range, one grain per physical pixel (size by devicePixelRatio), tiled with mix-blend-mode: overlay at 0.4 opacity.
+4. Pattern: instead of rays or contours, draw one of EmDash's ten halftone motifs (waves, ripple, em dash, sphere, lines of text, waveform, braid, stacked layers, horizon, calendar) as white dots on a regular grid, with dot size set by intensity. Ordinary dots at 0.35 opacity; the motif's accent part at 0.95 with a soft white glow. When a cover carries a title, fade the pattern to about 15% opacity in a horizontal band behind it; the motifs are centred, so a radial mask would erase them.
+5. Type, in Inter: titles at weight 400, 8% of the cover width, centered, white. Release covers show just the version number ("1.3") at weight 500, 30% of the width, with tight tracking.
+6. Card chrome follows emdashcms.com: an 18px card radius with a 4px #EDEDED ring, a 12px radius on the cover inside it, 16:10 covers in the grid and 2:1 on the post page.
+7. Motion: blobs drift over 20–28 seconds. Turn all motion off under prefers-reduced-motion.
+
+Output a single standalone HTML file with no external libraries.`;
+
+/* ==========================================================================
+   Branches
+   ========================================================================== */
+function recipeBody() {
+	return row(
+		board("1.1", "The post, in English", "Ian (@ianneo_ai), Oct 22, 2026, on the ElevenLabs blog covers.", prose(POST_EN), { width: 480 }),
+		board("1.2", "The prompt, in English", "Paste it into Claude or ChatGPT for the original 3×2 wall. Branch 4 rebuilds that wall here.", code(PROMPT_EN, "prompt.txt"), { width: 540 }),
+		board("1.3", "Remixed for EmDash", "The same recipe with the logo's color ramp, the blog's halftone motifs and emdashcms.com card chrome.", code(PROMPT_EMDASH, "prompt-emdash.txt"), { width: 540 }),
+	);
+}
+
+function anatomyBody() {
+	const base = { palette: "heat", seed: "anatomy", r: 16, mirror: false };
+	const pattern = { kind: "halftone", seed: "emdash-1-3", grid: [22, 22], mask: true };
+	const title = "Readable revision\nhistory";
+	const only = (keep) => ({ base: false, blobs: false, pattern: false, grain: false, title: false, [keep]: true });
+	const steps = ["Base", "+ Blobs", "+ Grain", "+ Pattern", "+ Title"];
+	return row(
+		board("2.1", "Five layers, bottom to top", "Hover the stack to pull it apart. Only the grain blends with what's under it; the rest is a plain stack.", `
+			<div class="xwrap">
+				<div class="xstack"><div class="xscene">
+					<div class="xlayer" style="--i:0">${C({ ...base, static: true, layers: only("base") })}</div>
+					<div class="xlayer is-plane" style="--i:1">${C({ ...base, layers: only("blobs"), cls: "no-ring" })}</div>
+					<div class="xlayer is-plane" style="--i:2"><div class="xgrain"></div></div>
+					<div class="xlayer is-glass" style="--i:3">${C({ ...base, pattern, layers: only("pattern"), cls: "no-ring" })}</div>
+					<div class="xlayer is-glass" style="--i:4">${C({ ...base, title, layers: only("title"), cls: "no-ring" })}</div>
+				</div></div>
+				<ol class="xlegend">
+					<li><span><b>Title</b>Inter 400 at 8% of the width, white</span></li>
+					<li><span><b>Pattern</b>White linework or halftone dots near 0.3 opacity, faded behind the title</span></li>
+					<li><span><b>Grain</b>A soft Gaussian noise tile, 128 × 128, overlay at 0.4</span></li>
+					<li><span><b>Blobs</b>Four radial gradients with fully faded edges</span></li>
+					<li><span><b>Base</b>Linear, light and cool down to dark and warm</span></li>
+				</ol>
+			</div>`, { width: 700 }),
+		board("2.2", "Built up", "The same cover, one layer at a time.",
+			`<div class="buildup">${steps.map((label, i) => fig(C({
+				...base, w: 158, title, pattern,
+				layers: { blobs: i >= 1, grain: i >= 2, pattern: i >= 3, title: i >= 4 },
+			}), `<b>${label}</b>`)).join(`<span class="arrow" aria-hidden="true">→</span>`)}</div>`),
+	);
+}
+
+function grainBody() {
+	const amounts = [[0, "Plastic"], [0.2, "Faint"], [0.4, "The recipe"], [0.7, "Gritty"]];
+	return stack(
+		board("3.1", "Amount", "Overlay at 0, 0.2, 0.4 and 0.7. Overlay grains the mid-tones most and fades toward the palest and darkest parts of the cover.",
+			grid(4, "minmax(0,1fr)", amounts.map(([g, label]) => fig(C({ palette: "el1", seed: "grain-amount", grain: g, mirror: false }), `<b>${g}</b> · ${label}`)))),
+		row(
+			board("3.2", "Banding, then dithered", "A ramp quantised to 24 levels, without and with noise added first. Exaggerated so the bands show on any screen; real 8-bit banding is subtler, and the fix is the same.", `
+				<div class="band">
+					<div><p class="band-label"><b>No noise</b><span>bands</span></p><canvas data-band="0"></canvas></div>
+					<div><p class="band-label"><b>Noise, then quantise</b><span>grain</span></p><canvas data-band="1"></canvas></div>
+				</div>`),
+			board("3.3", "One grain per device pixel", "The tile is drawn at 128 ÷ devicePixelRatio CSS pixels. Two 20 × 20 pixel crops of the same overlay, magnified 10×.", `
+				<div class="loupes">
+					${fig(`<canvas data-loupe="light"></canvas>`, "<b>Light area</b> · grain clearly visible")}
+					${fig(`<canvas data-loupe="dark"></canvas>`, "<b>Dark area</b> · almost swallowed")}
+				</div>`),
+		),
+	);
+}
+
+function colorBody() {
+	const bracketRows = [
+		["sunset", 0, 10, 0],
+		["kiln", 0, 4, 1], ["dusk", 5, 7, 1], ["midnight", 8, 10, 1],
+		["heat", 2, 5, 2], ["afterglow", 6, 10, 2],
+	];
+	const brackets = bracketRows.map(([key, a, b, rowIndex]) => {
+		const p = PALETTES[key];
+		// Stop labels sit centred in 11 equal columns.
+		const col = 100 / RAMP.length, left = col / 2 + a * col, width = (b - a) * col;
+		return `<div class="bracket" style="left:${left.toFixed(3)}%;width:${width.toFixed(3)}%;top:${rowIndex * 40}px"><span><i style="--sw:${p.blobs[2][0]}"></i>${p.name}</span></div>`;
+	}).join("");
+	const rampPalette = { name: "ramp", blobs: [], baseCSS: `linear-gradient(90deg in oklab, ${RAMP.join(", ")})` };
+	const set = ["sunset", "kiln", "heat", "dusk", "afterglow", "midnight", "tide", "moss"];
+	const wall = [
+		["el1", "Product\nTeardowns", null],
+		["el2", "Indie Builders\nWeekly", "rays"],
+		["el3", "AI Workflow\nHandbook", "contours"],
+		["el4", "Design\nNotes", "sound"],
+		["el5", "Late Night\nShipping", "dots"],
+		["el6", "Build in\nPublic", "lens"],
+	];
+	return row(
+		stack(
+			board("4.1", "Already in the logo", "The EmDash mark's gradient runs cream → amber → orange → coral → rose → plum → indigo, and each stop is a neighbour of the next on the color wheel. Each palette takes a short run of it.", `
+				<div class="ramp-row">
+					<div class="ramp-mark">${mark("ramp")}</div>
+					<div class="ramp">
+						${C({ palette: rampPalette, seed: "ramp", ar: 760 / 64, r: 14, static: true })}
+						<div class="ramp-stops">${RAMP.map((c) => `<span>${c.slice(1)}</span>`).join("")}</div>
+						<div class="brackets">${brackets}</div>
+					</div>
+				</div>`),
+			board("4.2", "An EmDash set", "Pale, slightly cool fog on top, dark and warm underneath. Six from the ramp, plus two cool sets borrowed from the reference for posts that aren't releases.",
+				grid(4, 186, set.map((key) => {
+					const p = PALETTES[key];
+					return fig(C({ palette: key, seed: `set-${key}` }), `<b>${p.name}</b> · ${p.tag}${p.borrowed ? " (borrowed)" : ""}${swatches(ExplorationCanvas.swatchesOf(p))}`);
+				}))),
+		),
+		board("4.3", "The reference wall", "The original prompt, rebuilt: six palettes, five line patterns.",
+			grid(3, 212, wall.map(([key, title, kind]) =>
+				fig(C({ palette: key, seed: `wall-${key}`, title, pattern: kind ? { kind } : null, mirror: false }), `<b>${kind ?? "no pattern"}</b> · ${PALETTES[key].name}`)))),
+	);
+}
+
+function halftoneBody() {
+	const used = {};
+	for (const post of POSTS) (used[motifOf(post.slug)] ??= []).push(post);
+	const palettes = { waves: "tide", ripple: "kiln", dash: "sunset", sphere: "midnight", lines: "heat", waveform: "afterglow", braid: "dusk", stack: "moss", horizon: "dusk", calendar: "heat" };
+	const ten = MOTIFS.map((motif) => {
+		const posts = used[motif] ?? [];
+		const seed = posts[0]?.slug ?? seedFor(motif, "motif");
+		const label = posts.length ? posts.map((p) => p.name).join(", ") : "not used yet";
+		return fig(C({ palette: palettes[motif], seed, pattern: { kind: "halftone", seed, grid: [22, 22] } }), `<b>${motif}</b> · ${label}`);
+	});
+	const accents = [["white", "White glow", "the recipe"], ["heat", "Heat orange", "the brand"], ["none", "Ink only", "quietest"]];
+	const twins = [["horizon", "rays", "heat"], ["ripple", "contours", "tide"], ["waveform", "sound", "afterglow"], ["calendar", "dots", "dusk"], ["dash", "lens", "sunset"]];
+	return stack(
+		row(
+			board("5.1", "The blog's ten motifs, inked white", "Drawn by the production engine from <code>src/lib/post-art.ts</code>, unchanged. Ordinary dots at 0.36, each motif's accent part at 0.95 with a glow, all under the grain. Captions name the live posts that get each motif today.",
+				grid(5, 178, ten)),
+			board("5.2", "Accent", "The ripple's drop three ways. White keeps to the recipe; heat orange keeps the brand but breaks the adjacent-hue rule.",
+				grid(3, 178, accents.map(([accent, name, note]) =>
+					fig(C({ palette: "tide", seed: "emdash-1-1", accent, pattern: { kind: "halftone", seed: "emdash-1-1", grid: [22, 22] } }), `<b>${name}</b> · ${note}`)))),
+		),
+		board("5.3", "Twins", "Five motifs, each next to the reference pattern that rhymes with it.",
+			`<div class="twins">${twins.map(([motif, kind, palette]) => {
+				const seed = (POSTS.find((p) => motifOf(p.slug) === motif)?.slug) ?? seedFor(motif, "twin");
+				return `<figure class="twin"><div class="twin-pair">${C({ palette, seed, w: 132, r: 16, pattern: { kind: "halftone", seed, grid: [20, 20] } })}<span class="sep" aria-hidden="true">↔</span>${C({ palette, seed, w: 132, r: 16, pattern: { kind } })}</div><figcaption><b>${motif}</b> ↔ ${kind}</figcaption></figure>`;
+			}).join("")}</div>`),
+	);
+}
+
+function typeBody() {
+	const centred = [POSTS[0], POSTS[1], POSTS[5]];
+	const releases = [POSTS[6], POSTS[3], POSTS[2], POSTS[0]];
+	return stack(
+		row(
+			board("6.1", "Centred title", "The reference layout: Inter 400 at 8% of the width, two lines. The motifs are centred, so instead of the reference's radial mask the dots fade to a band behind the words.",
+				grid(3, 206, centred.map((p) => fig(C({ palette: p.palette, seed: p.slug, title: p.short, pattern: { kind: "halftone", seed: p.slug, grid: [24, 24] } }), `<b>${p.name}</b> · ${p.tag}`)))),
+			board("6.2", "Release numeral", "For changelog posts: the version alone, weight 500 at 30% of the width, tracking −0.065em.",
+				grid(4, 170, releases.map((p) => fig(C({ palette: p.palette, seed: p.slug, titleStyle: "numeral", title: p.ver, caption: p.date.replace(/ \d+,/, "") }), `<b>EmDash ${p.ver}</b> · ${p.date}`)))),
+		),
+		board("6.3", "Corner, mark, stamp", "An editorial corner with the tag and date, the em dash on its own, and a package stamp.", grid(4, 206, [
+			fig(C({ palette: "tide", seed: POSTS[1].slug, titleStyle: "corner", tag: "Engineering", date: "10.07", title: "How EmDash uses Clef to moderate the plugin registry", pattern: { kind: "contours", mask: false } }), "<b>Corner</b> · tag, date, title"),
+			fig(C({ palette: "moss", seed: POSTS[4].slug, titleStyle: "corner", tag: "Plugins", date: "09.28", title: "Ship your plugin to the registry", pattern: { kind: "halftone", seed: POSTS[4].slug, grid: [24, 24], mask: false } }), "<b>Corner</b> · over a motif"),
+			fig(C({ palette: "sunset", seed: "mark", titleStyle: "mark" }), "<b>Mark</b> · the em dash alone"),
+			fig(C({ palette: "midnight", seed: "stamp", titleStyle: "mono", title: "emdash@1.3.0", caption: "2026-10-15", pattern: { kind: "dots" } }), "<b>Stamp</b> · for release notes"),
+		])),
+	);
+}
+
+function blogBody() {
+	const feature = POSTS[0];
+	const earlier = POSTS.slice(1, 7);
+	const byline = (p) => `<span class="byline"><span class="avatar">${initials(p.author)}</span><b>${p.author}</b></span>`;
+	const card = (p, variant) => `
+		<article class="pc${variant === "feature" ? " pc--feature" : ""}">
+			<div class="pc-media" data-cover="${p.slug}" data-variant="${variant}"></div>
+			<div class="pc-body">
+				<p class="pc-meta"><time>${p.date}</time><span aria-hidden="true">·</span><span>${p.min} min read</span></p>
+				<h4 class="pc-title">${p.title}</h4>
+				<p class="pc-excerpt">${p.excerpt}</p>
+				<div class="pc-foot">${byline(p)}<span class="pc-cta">Read ${ARROW}</span></div>
+			</div>
+		</article>`;
+	const og = (p, mode) => {
+		const top = `<div class="og-top">${MARK_WHITE}<span>EmDash</span><span class="og-tag">${p.tag}</span></div>`;
+		const bottom = mode === "release"
+			? `<div><div class="og-num">${p.ver}</div><div class="og-title">${esc(shortTitle(p.title).replace(/^./, (c) => c.toUpperCase()))}</div><div class="og-meta">${p.date} · ${p.min} min read</div></div>`
+			: `<div><div class="og-title">${esc(p.title)}</div><div class="og-meta">${p.author} · ${p.date}</div></div>`;
+		return C({ palette: p.palette, seed: p.slug, ar: 1200 / 630, r: 18, html: `<div class="og">${top}${bottom}</div>`, pattern: { kind: "halftone", seed: p.slug, grid: [60, 32], mask: "left" } });
+	};
+	const controls = seg("cover", [["current", "Current"], ["motif", "Motif"], ["title", "Title"], ["numeral", "Numeral"], ["plain", "Plain"]], "motif")
+		+ seg("theme", [["auto", "Auto"], ["light", "Light"], ["dark", "Dark"]], "auto");
+	return row(
+		board("7.1", "Blog index", "The real layout and posts. Each cover keeps its post's production motif. The page follows the canvas theme; pin it to Light or Dark to compare.", `
+			<div class="site site-index" id="site-index">
+				<header class="site-header">
+					<div>
+						<p class="site-eyebrow">Blog</p>
+						<h4 class="site-title"><span>Release notes and product updates from</span> EmDash</h4>
+					</div>
+					<div class="site-intro">
+						<p>This is where we announce new releases, notable improvements, and major changes to EmDash CMS.</p>
+						<a href="#" tabindex="-1">Browse by tag</a>
+					</div>
+				</header>
+				${card(feature, "feature")}
+				<h5 class="site-section">Earlier posts</h5>
+				<div class="site-grid">${earlier.map((p) => card(p, "card")).join("")}</div>
+			</div>`, { controls }),
+		stack(
+			board("7.2", "Post page", "The 2:1 cover under the header, as on a post today.", `
+				<div class="site site-post" id="site-post">
+					<div class="pp-head">
+						<span class="pp-back">${ARROW}Blog</span>
+						<p class="pp-meta">October 15, 2026 · 14 min read</p>
+						<h4 class="pp-title">${feature.title}</h4>
+						<p class="pp-dek">${feature.excerpt}</p>
+						<div class="pp-byline"><span class="avatar">MK</span><b>Matt Kane</b></div>
+						<div class="pp-tags"><span>Changelog</span></div>
+					</div>
+					<div class="pp-cover">${C({ palette: "heat", seed: feature.slug, ar: 2, r: 0, pattern: { kind: "halftone", seed: feature.slug, grid: [64, 32] } })}</div>
+					<div class="pp-prose"><p>EmDash 1.3 is out. You can now see exactly what changed between two saved versions of an entry, edit on the page with the same toolbar and image picker as the admin, and tell AI crawlers not to train on your site.</p></div>
+				</div>`),
+			board("7.3", "Share cards", "1200 × 630, drawn at half size. A release card and an article card.",
+				`<div class="stack" style="gap:24px;width:600px">${og(POSTS[0], "release")}${og(POSTS[1], "article")}</div>`, { cls: "og-board" }),
+		),
+	);
+}
+
+function motionBody() {
+	return row(
+		board("8.1", "Drift", "The four blobs drift on their own periods, so the light shifts slowly and never settles.",
+			`<div style="width:440px" id="motion-card">${C({ palette: "dusk", seed: "hover-me", title: "Drift", pattern: { kind: "lens" }, r: 24 })}</div>`),
+		board("8.2", "Drift lanes", "The card's four blobs loop on their own periods between 20 and 28 seconds, so the cover never visibly repeats. Everything stops under prefers-reduced-motion.", `<div class="lanes" id="lanes"></div>`),
+	);
+}
+
+/* ==========================================================================
+   Demos drawn after mount
+   ========================================================================== */
+function drawBanding(canvas, dither) {
+	const dpr = Math.min(2, devicePixelRatio || 1);
+	const w = Math.round(520 * dpr), h = Math.round(72 * dpr);
+	canvas.width = w; canvas.height = h;
+	const ctx = canvas.getContext("2d");
+	const img = ctx.createImageData(w, h);
+	const A = [58, 30, 92], B = [246, 154, 84], levels = 24, rand = rng(11);
+	for (let y = 0; y < h; y++) {
+		for (let x = 0; x < w; x++) {
+			const t = x / (w - 1), i = (y * w + x) * 4, n = dither ? rand() - 0.5 : 0;
+			for (let c = 0; c < 3; c++) {
+				const v = ((A[c] + (B[c] - A[c]) * t) / 255) * (levels - 1);
+				img.data[i + c] = Math.round((Math.min(levels - 1, Math.max(0, Math.round(v + n))) / (levels - 1)) * 255);
+			}
+			img.data[i + 3] = 255;
+		}
+	}
+	ctx.putImageData(img, 0, 0);
+}
+function drawLoupe(canvas, rgb, seed) {
+	const N = 20;
+	canvas.width = canvas.height = N;
+	const ctx = canvas.getContext("2d");
+	const img = ctx.createImageData(N, N), rand = rng(seed);
+	for (let i = 0; i < N * N; i++) {
+		const gauss = Math.sqrt(-2 * Math.log(1 - rand())) * Math.cos(2 * Math.PI * rand());
+		const g = Math.min(1, Math.max(0, 0.5 + 0.12 * gauss)), shade = 1 - (Math.floor(i / N) / N) * 0.06;
+		for (let c = 0; c < 3; c++) {
+			const b = (rgb[c] / 255) * shade;
+			const o = b < 0.5 ? 2 * b * g : 1 - 2 * (1 - b) * (1 - g);
+			img.data[i * 4 + c] = Math.round((b * 0.6 + o * 0.4) * 255);
+		}
+		img.data[i * 4 + 3] = 255;
+	}
+	ctx.putImageData(img, 0, 0);
+}
+function driftLanes(card, el) {
+	el.innerHTML = [...card.querySelectorAll(".blob")].map((b, i) => {
+		const dur = parseFloat(b.style.getPropertyValue("--dur"));
+		const c = b.style.getPropertyValue("--c");
+		return `<div class="lane"><span>Blob ${i + 1}</span><span class="lane-track"><i style="--dur:${dur}s;--sw:${c}"></i></span><b>${dur.toFixed(1)} s</b></div>`;
+	}).join("");
+}
+
+/* ==========================================================================
+   Mount
+   ========================================================================== */
+mount({
+	title: "Grain × Halftone",
+	subtitle: "EmDash cover explorations",
+	core: {
+		eyebrow: "Exploration map · Oct 22, 2026",
+		title: "Grain × Halftone",
+		desc: "ElevenLabs' grainy gradient covers, crossed with the halftone motifs already on the EmDash blog. Left: the recipe and why it works. Right: how it could look on emdashcms.com.",
+		card: { palette: "sunset", seed: "emdash-1-0", pattern: { kind: "halftone", seed: "emdash-1-0", grid: [30, 30] } },
+	},
+	branches: [
+		{ title: "The recipe", sub: "Translated from Ian's post", orb: "el1", body: recipeBody },
+		{ title: "Anatomy", sub: "Five layers, one blend", orb: "sunset", body: anatomyBody },
+		{ title: "Grain", sub: "Why the noise matters most", orb: "heat", body: grainBody },
+		{ title: "Color", sub: "Adjacent hues, light over dark", orb: "dusk", body: colorBody },
+		{ title: "Halftone × grain", sub: "The blog's motifs, inked white", orb: "tide", body: halftoneBody },
+		{ title: "Type on the cover", sub: "Titles, numerals, marks", orb: "kiln", body: typeBody },
+		{ title: "On the blog", sub: "In context on emdashcms.com", orb: "afterglow", body: blogBody },
+		{ title: "Motion", sub: "Drift and stillness", orb: "midnight", body: motionBody },
+	],
+	onReady({ $, $$, makeCard, onSeg }) {
+		let coverMode = "motif";
+		const renderBlogCovers = () => {
+			for (const media of $$("[data-cover]")) {
+				const post = POSTS.find((p) => p.slug === media.dataset.cover);
+				const feature = media.dataset.variant === "feature";
+				const gridSize = feature ? [52, 38] : [36, 22];
+				const opts = { palette: post.palette, seed: post.slug, ar: feature ? 1.2 : 1.6, r: 0, cls: "no-ring" };
+				const motif = { kind: "halftone", seed: post.slug, grid: gridSize };
+				let el;
+				switch (coverMode) {
+					case "current": el = paperCover(post.slug, gridSize); break;
+					case "motif": el = makeCard({ ...opts, pattern: motif }); break;
+					case "title": el = makeCard({ ...opts, title: post.short, pattern: motif }); break;
+					case "numeral": el = post.ver ? makeCard({ ...opts, titleStyle: "numeral", title: post.ver, caption: post.tag }) : makeCard({ ...opts, pattern: motif }); break;
+					default: el = makeCard(opts);
+				}
+				media.replaceChildren(el);
+			}
+		};
+		renderBlogCovers();
+		onSeg("cover", (v) => { coverMode = v; renderBlogCovers(); });
+		onSeg("theme", (v) => {
+			for (const el of [$("#site-index"), $("#site-post")]) siteTheme(el, v);
+		});
+		for (const c of $$("[data-band]")) drawBanding(c, c.dataset.band === "1");
+		drawLoupe($('[data-loupe="light"]'), [246, 190, 140], 3);
+		drawLoupe($('[data-loupe="dark"]'), [44, 14, 6], 5);
+		driftLanes($("#motion-card .gc"), $("#lanes"));
+	},
+});
+</script>
+</body>
+</html>

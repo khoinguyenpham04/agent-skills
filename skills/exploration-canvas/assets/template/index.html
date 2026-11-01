@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exploration canvas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&display=swap">
+<link rel="stylesheet" href="canvas.css">
+<style>
+/* Styles for this exploration only. canvas.css is the shared engine; leave it alone. */
+</style>
+</head>
+<body>
+{{HALFTONE}}<script src="canvas.js"></script>
+<script>
+/*
+ * Write the exploration here. Each branch is one direction or question; its
+ * body is a row or stack of boards. Replace every placeholder below, keep the
+ * shape. See the skill's references/components.md for every helper and option.
+ */
+const { mount, C, board, fig, grid, row, stack, prose, code, seg, swatches, siteTheme, PALETTES, swatchesOf, ARROW } = ExplorationCanvas;
+
+mount({
+	title: "{{TITLE}}",
+	subtitle: "{{SUBTITLE}}",
+	core: {
+		eyebrow: "Exploration map · {{DATE}}",
+		title: "{{TITLE}}",
+		desc: "One or two sentences: what this map explores and why. Left: what we know. Right: what we could make.",
+		card: { palette: "sunset", seed: "core", pattern: { kind: "contours" } },
+	},
+	branches: [
+		// ---------- Left: understand ----------
+		{ title: "Brief", sub: "What we're exploring", orb: "el3", body: () => row(
+			board("1.1", "The ask", "The request and its constraints, in plain words.", prose(`
+				<p><strong>Goal.</strong> What this exploration should help decide.</p>
+				<ul><li>Constraint or requirement</li><li>Audience and where it ships</li><li>What done looks like</li></ul>`), { width: 460 }),
+			board("1.2", "Source", "Specs, prompts or notes the work starts from. The Copy button copies the block.",
+				code("Paste the brief, prompt or spec here.", "brief.txt"), { width: 520 }),
+		) },
+		{ title: "References", sub: "What already exists", orb: "el1", body: () =>
+			board("2.1", "Reference wall", "Rebuild references so they sit side by side. Captions read “<b>Name</b> · note”.",
+				grid(3, 206, ["rays", "contours", "sound", "dots", "lens", null].map((kind, i) =>
+					fig(C({ palette: `el${i + 1}`, seed: `ref-${i}`, title: `Reference\n${i + 1}`, pattern: kind ? { kind } : null }), `<b>Reference ${i + 1}</b> · ${kind ?? "no pattern"}`)))) },
+		{ title: "Palette", sub: "Color for this piece", orb: "dusk", body: () =>
+			board("3.1", "Candidate palettes", "Neighbouring hues, light and cool on top, dark and warm below.",
+				grid(4, 176, ["sunset", "kiln", "heat", "dusk"].map((key) =>
+					fig(C({ palette: key, seed: `pal-${key}` }), `<b>${PALETTES[key].name}</b> · ${PALETTES[key].tag}${swatches(swatchesOf(PALETTES[key]))}`)))) },
+
+		// ---------- Right: apply ----------
+		{ title: "Directions", sub: "Three ways to go", orb: "tide", body: () => row(
+			...[["A", "afterglow", "rays"], ["B", "heat", "contours"], ["C", "moss", "sound"]].map(([name, palette, kind], i) =>
+				board(`4.${i + 1}`, `Direction ${name}`, "One sentence on the idea and what to look at.",
+					grid(2, 190, [0, 1].map((v) => fig(C({ palette, seed: `dir-${name}-${v}`, title: v ? "Variant\ntwo" : "Variant\none", pattern: { kind } }), `<b>${name}${v + 1}</b> · note`))))),
+		) },
+		{ title: "Details", sub: "Type, numerals, marks", orb: "kiln", body: () =>
+			board("5.1", "Type on a card", "Centred title, numeral, corner, mark and stamp.", grid(5, 176, [
+				fig(C({ palette: "dusk", seed: "t1", title: "Two-line\ntitle" }), "<b>Centred</b>"),
+				fig(C({ palette: "kiln", seed: "t2", titleStyle: "numeral", title: "1.4", caption: "EmDash" }), "<b>Numeral</b>"),
+				fig(C({ palette: "tide", seed: "t3", titleStyle: "corner", tag: "Tag", date: "10.22", title: "A corner title over the card" }), "<b>Corner</b>"),
+				fig(C({ palette: "sunset", seed: "t4", titleStyle: "mark" }), "<b>Mark</b>"),
+				fig(C({ palette: "midnight", seed: "t5", titleStyle: "mono", title: "emdash@1.4.0", caption: "2026-10-22", pattern: { kind: "dots" } }), "<b>Stamp</b>"),
+			])) },
+		{ title: "In context", sub: "On the real page", orb: "afterglow", body: () =>
+			board("6.1", "Blog card", "The emdashcms.com post card, with a direction as its cover. It follows the canvas theme; pin it to Light or Dark to compare.", `
+				<div class="site" id="context-site" style="width:460px;padding:28px">
+					<article class="pc">
+						<div class="pc-media">${C({ palette: "afterglow", seed: "context", ar: 1.6, r: 0, cls: "no-ring", pattern: { kind: "rays" } })}</div>
+						<div class="pc-body">
+							<p class="pc-meta"><time>{{DATE}}</time><span aria-hidden="true">·</span><span>4 min read</span></p>
+							<h4 class="pc-title">A post title that wraps onto two lines</h4>
+							<p class="pc-excerpt">One or two sentences of excerpt, as the blog index shows them.</p>
+							<div class="pc-foot"><span class="byline"><span class="avatar">EM</span><b>Author Name</b></span><span class="pc-cta">Read ${ARROW}</span></div>
+						</div>
+					</article>
+				</div>`, { controls: seg("theme", [["auto", "Auto"], ["light", "Light"], ["dark", "Dark"]], "auto") }) },
+	],
+	onReady({ $, onSeg }) {
+		onSeg("theme", (v) => siteTheme($("#context-site"), v));
+	},
+});
+</script>
+</body>
+</html>

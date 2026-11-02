@@ -9,76 +9,162 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&display=swap">
 <link rel="stylesheet" href="canvas.css">
 <style>
-/* Styles for this exploration only. canvas.css is the shared engine; leave it alone. */
+/* Styles for this canvas only. canvas.css is the shared engine; leave it alone. */
 </style>
 </head>
 <body>
-{{HALFTONE}}<script src="canvas.js"></script>
+<script src="canvas.js"></script>
 <script>
 /*
- * Write the exploration here. Each branch is one direction or question; its
- * body is a row or stack of boards. Replace every placeholder below, keep the
- * shape. See the skill's references/components.md for every helper and option.
+ * Write the canvas here. The core is the topic; each branch is one angle on
+ * it; each board makes one point. This starter uses every piece once so you
+ * can see them working: keep the pieces the material needs, drop the rest,
+ * and replace all of the text. The skill's references/components.md lists
+ * every helper and option.
  */
-const { mount, C, board, fig, grid, row, stack, prose, code, seg, swatches, siteTheme, PALETTES, swatchesOf, ARROW } = ExplorationCanvas;
+const {
+	mount, board, row, stack, prose, note, quote, stickies, table,
+	flow, timeline, matrix, cycle, steps, demo, slider, toggle, flips, quiz, reveal,
+} = ExplorationCanvas;
 
 mount({
 	title: "{{TITLE}}",
 	subtitle: "{{SUBTITLE}}",
+	// accent: "#5e6ad2",  // the one accent color; pick one that suits the topic
+	// source: { youtube: "VIDEO_ID", title: "Talk title", by: "Speaker" },  // makes t("12:34") and video() play it
 	core: {
-		eyebrow: "Exploration map · {{DATE}}",
+		eyebrow: "Exploration · {{DATE}}",
 		title: "{{TITLE}}",
-		desc: "One or two sentences: what this map explores and why. Left: what we know. Right: what we could make.",
-		card: { palette: "sunset", seed: "core", pattern: { kind: "contours" } },
+		desc: "One or two sentences: what this canvas explores, and what it should help you understand or decide.",
+		meta: ["<b>Source</b> · where this comes from", "<b>For</b> · who it’s for"],
 	},
 	branches: [
-		// ---------- Left: understand ----------
-		{ title: "Brief", sub: "What we're exploring", orb: "el3", body: () => row(
-			board("1.1", "The ask", "The request and its constraints, in plain words.", prose(`
-				<p><strong>Goal.</strong> What this exploration should help decide.</p>
-				<ul><li>Constraint or requirement</li><li>Audience and where it ships</li><li>What done looks like</li></ul>`), { width: 460 }),
-			board("1.2", "Source", "Specs, prompts or notes the work starts from. The Copy button copies the block.",
-				code("Paste the brief, prompt or spec here.", "brief.txt"), { width: 520 }),
+		{ title: "The gist", sub: "Start here", icon: "book", body: () => row(
+			board("1.1", "In one minute", "The whole idea in a few sentences, before any detail.", stack(
+				prose(`<p><strong>The point.</strong> One sentence a newcomer could repeat back.</p>
+					<ul><li>The first thing to know</li><li>The second thing to know</li><li>What it changes</li></ul>`),
+				note("<strong>Why it matters.</strong> The consequence that makes this worth learning.", "insight"),
+			), { width: 460 }),
+			board("1.2", "In their words", "The lines from the source that carry the argument, and where they come from.", stack(
+				quote("A short, exact line from the source that states the idea.", { cite: "Speaker or author" }),
+				quote("A second line that adds the twist or the evidence.", { cite: "Speaker or author" }),
+			), { width: 440 }),
 		) },
-		{ title: "References", sub: "What already exists", orb: "el1", body: () =>
-			board("2.1", "Reference wall", "Rebuild references so they sit side by side. Captions read “<b>Name</b> · note”.",
-				grid(3, 206, ["rays", "contours", "sound", "dots", "lens", null].map((kind, i) =>
-					fig(C({ palette: `el${i + 1}`, seed: `ref-${i}`, title: `Reference\n${i + 1}`, pattern: kind ? { kind } : null }), `<b>Reference ${i + 1}</b> · ${kind ?? "no pattern"}`)))) },
-		{ title: "Palette", sub: "Color for this piece", orb: "dusk", body: () =>
-			board("3.1", "Candidate palettes", "Neighbouring hues, light and cool on top, dark and warm below.",
-				grid(4, 176, ["sunset", "kiln", "heat", "dusk"].map((key) =>
-					fig(C({ palette: key, seed: `pal-${key}` }), `<b>${PALETTES[key].name}</b> · ${PALETTES[key].tag}${swatches(swatchesOf(PALETTES[key]))}`)))) },
 
-		// ---------- Right: apply ----------
-		{ title: "Directions", sub: "Three ways to go", orb: "tide", body: () => row(
-			...[["A", "afterglow", "rays"], ["B", "heat", "contours"], ["C", "moss", "sound"]].map(([name, palette, kind], i) =>
-				board(`4.${i + 1}`, `Direction ${name}`, "One sentence on the idea and what to look at.",
-					grid(2, 190, [0, 1].map((v) => fig(C({ palette, seed: `dir-${name}-${v}`, title: v ? "Variant\ntwo" : "Variant\none", pattern: { kind } }), `<b>${name}${v + 1}</b> · note`))))),
+		{ title: "How it works", sub: "Step by step", icon: "steps", body: () => stack(
+			board("2.1", "Walk through it", "Click the stage or press → to add one part at a time.", steps({
+				id: "how", width: 600,
+				stage: `<svg viewBox="0 0 560 140">
+					<rect class="sv-box" x="8" y="40" width="148" height="60" rx="14" data-focus="1"/>
+					<text class="sv-label" x="82" y="70" text-anchor="middle" dominant-baseline="central">Input</text>
+					<text class="sv-small" x="82" y="124" text-anchor="middle">what goes in</text>
+					<path class="sv-line" d="M164 70h44" marker-end="url(#ec-arrow)" data-in="2"/>
+					<rect class="sv-box" x="216" y="40" width="148" height="60" rx="14" data-in="2" data-focus="2"/>
+					<text class="sv-label" x="290" y="70" text-anchor="middle" dominant-baseline="central" data-in="2">Transform</text>
+					<text class="sv-small" x="290" y="124" text-anchor="middle" data-in="2">the move that does the work</text>
+					<path class="sv-line" d="M372 70h44" marker-end="url(#ec-arrow)" data-in="3"/>
+					<rect class="sv-accent" x="424" y="40" width="128" height="60" rx="14" data-in="3"/>
+					<text class="sv-label" x="488" y="70" text-anchor="middle" dominant-baseline="central" data-in="3">Result</text>
+					<text class="sv-small" x="488" y="124" text-anchor="middle" data-in="3">what comes out</text>
+				</svg>`,
+				steps: [
+					{ title: "Start with the input", text: "What goes in, and what it looks like." },
+					{ title: "Transform it", text: "The one move that does the work. Each step adds one part to the picture." },
+					{ title: "Read the result", text: "What comes out, and how you can tell it worked." },
+				],
+			})),
+			board("2.2", "The same, as a flow", "Each arrow is a handoff; label the ones that need it.", flow(
+				["Input", { title: "Transform", text: "The step that matters", accent: true }, "Result"],
+				{ labels: ["feeds", "produces"] },
+			)),
 		) },
-		{ title: "Details", sub: "Type, numerals, marks", orb: "kiln", body: () =>
-			board("5.1", "Type on a card", "Centred title, numeral, corner, mark and stamp.", grid(5, 176, [
-				fig(C({ palette: "dusk", seed: "t1", title: "Two-line\ntitle" }), "<b>Centred</b>"),
-				fig(C({ palette: "kiln", seed: "t2", titleStyle: "numeral", title: "1.4", caption: "EmDash" }), "<b>Numeral</b>"),
-				fig(C({ palette: "tide", seed: "t3", titleStyle: "corner", tag: "Tag", date: "10.22", title: "A corner title over the card" }), "<b>Corner</b>"),
-				fig(C({ palette: "sunset", seed: "t4", titleStyle: "mark" }), "<b>Mark</b>"),
-				fig(C({ palette: "midnight", seed: "t5", titleStyle: "mono", title: "emdash@1.4.0", caption: "2026-10-22", pattern: { kind: "dots" } }), "<b>Stamp</b>"),
-			])) },
-		{ title: "In context", sub: "On the real page", orb: "afterglow", body: () =>
-			board("6.1", "Blog card", "The emdashcms.com post card, with a direction as its cover. It follows the canvas theme; pin it to Light or Dark to compare.", `
-				<div class="site" id="context-site" style="width:460px;padding:28px">
-					<article class="pc">
-						<div class="pc-media">${C({ palette: "afterglow", seed: "context", ar: 1.6, r: 0, cls: "no-ring", pattern: { kind: "rays" } })}</div>
-						<div class="pc-body">
-							<p class="pc-meta"><time>{{DATE}}</time><span aria-hidden="true">·</span><span>4 min read</span></p>
-							<h4 class="pc-title">A post title that wraps onto two lines</h4>
-							<p class="pc-excerpt">One or two sentences of excerpt, as the blog index shows them.</p>
-							<div class="pc-foot"><span class="byline"><span class="avatar">EM</span><b>Author Name</b></span><span class="pc-cta">Read ${ARROW}</span></div>
-						</div>
-					</article>
-				</div>`, { controls: seg("theme", [["auto", "Auto"], ["light", "Light"], ["dark", "Dark"]], "auto") }) },
+
+		{ title: "Key ideas", sub: "What to remember", icon: "bulb", body: () => row(
+			board("3.1", "Ideas on the wall", "One idea per note; color groups the ones that belong together.", stickies([
+				["The one thing that surprised you", "yellow"],
+				["A rule of thumb worth keeping", "blue"],
+				["A mistake people make", "pink"],
+				["An open question", "purple"],
+				["A place you’d use it", "green"],
+				["A term to look up", "orange"],
+			], { cols: 3 })),
+			board("3.2", "Side by side", "Compare the options on the questions that decide between them.", table(
+				["", "Option A", "Option B"],
+				[["Good at", "What A does best", "What B does best"], ["Costs", "What A asks of you", "What B asks of you"], ["Pick it when", "The case for A", "The case for B"]],
+			), { width: 480 }),
+		) },
+
+		{ title: "Play with it", sub: "Feel how it behaves", icon: "sliders", body: () => stack(
+			board("4.1", "Turn the knob", "Move the sliders; the chart redraws as you go.", demo({
+				id: "growth", view: `<svg></svg>`,
+				controls: [
+					slider("rate", "Growth per step", { min: 0, max: 30, value: 8, unit: "%" }),
+					slider("steps", "Steps", { min: 1, max: 40, value: 24 }),
+					toggle("compare", "Show steady growth", true),
+				],
+			}), { width: 760 }),
+			board("4.2", "Weigh the options", "Say what matters most and watch the ranking change.", demo({
+				id: "weigh", view: `<div id="weigh-bars"></div>`,
+				controls: [
+					slider("speed", "Speed matters", { min: 0, max: 10, value: 7 }),
+					slider("cost", "Low cost matters", { min: 0, max: 10, value: 4 }),
+					slider("ease", "Ease matters", { min: 0, max: 10, value: 5 }),
+				],
+			}), { width: 760 }),
+		) },
+
+		{ title: "Big picture", sub: "Where it fits", icon: "map", body: () => row(
+			board("5.1", "How it unfolds", "Key moments in order. With a video source, a time like 12:34 becomes a link that plays that moment.", timeline([
+				{ t: "First", title: "Where it starts", text: "The situation before the idea arrives." },
+				{ t: "Then", title: "The turn", text: "What changes, and why." },
+				{ t: "Now", title: "Where it stands", text: "What people do with it today." },
+			]), { width: 420 }),
+			board("5.2", "Where things sit", "Place ideas on the two questions that matter most.", matrix({
+				x: ["Easy", "Hard"], y: ["Small", "Big"], xLabel: "Effort", yLabel: "Payoff",
+				quadrants: ["Quick wins", "Big bets", "Fill-ins", "Skip"],
+				items: [["Idea one", 0.22, 0.8, "green"], ["Idea two", 0.74, 0.86, "blue"], ["Idea three", 0.3, 0.28, "yellow"], ["Idea four", 0.8, 0.22, "red"]],
+				size: 380,
+			})),
+			board("5.3", "The loop", "Parts that feed back into each other.", cycle(
+				["Try", "Measure", "Learn", "Adjust"],
+				{ r: 128, center: "Each turn starts from what the last one taught" },
+			)),
+		) },
+
+		{ title: "Test yourself", sub: "Check what stuck", icon: "check", body: () => row(
+			board("6.1", "Flip cards", "Say the answer out loud, then flip the card.", flips([
+				["A key term", "What it means, in one or two plain sentences."],
+				["Another term", "Its meaning, and how it differs from the first."],
+				["A question", "Its answer, with the reason in a few words."],
+				["A number to know", "The number, and what sets it."],
+			], { cols: 2 })),
+			board("6.2", "Quick quiz", `Pick an answer to see why it’s right or wrong. Hidden words like ${reveal("this one")} show on click.`, quiz([
+				{ q: "What do the arrow keys do on this canvas?", options: ["Pan the view", "Walk to the next board, and through each explainer’s steps", "Zoom in and out"], answer: 1, why: "← and → go board by board in order. Shift with an arrow pans." },
+				{ q: "Where should a quote on the canvas come from?", options: ["Memory", "The source itself, with its timestamp or page", "A summary of the source"], answer: 1, why: "Quotes are only useful when they’re exact and you can check them." },
+			]), { width: 540 }),
+		) },
 	],
-	onReady({ $, onSeg }) {
-		onSeg("theme", (v) => siteTheme($("#context-site"), v));
+
+	onReady({ onDemo, line, bars }) {
+		onDemo("growth", ({ rate, steps: n, compare }, el) => {
+			const r = rate / 100, end = (1 + r) ** n;
+			line(el.querySelector("svg"), {
+				x: [0, n], y: [0, Math.max(2, Math.ceil(end * 1.1))], xLabel: "Step", yLabel: "Size",
+				series: [
+					{ fn: (x) => (1 + r) ** x, label: "Compounding" },
+					...(compare ? [{ fn: (x) => 1 + r * x, label: "Steady", muted: true }] : []),
+				],
+				dots: [[n, end]],
+			});
+		});
+		onDemo("weigh", ({ speed, cost, ease }, el) => {
+			const options = { "Option A": [9, 3, 5], "Option B": [5, 8, 6], "Option C": [3, 6, 9] };
+			const ranked = Object.entries(options)
+				.map(([label, [s, c, e]]) => ({ label, value: s * speed + c * cost + e * ease }))
+				.sort((a, b) => b.value - a.value);
+			ranked[0].hi = true;
+			bars(el.querySelector("#weigh-bars"), ranked, { format: (v) => v.toFixed(0) });
+		});
 	},
 });
 </script>

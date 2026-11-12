@@ -29,13 +29,13 @@ Reduced motion targets vestibular triggers, not feedback.
 
 | Disable entirely | Replace | Keep |
 | --- | --- | --- |
-| Parallax scrolling | Slide/scale/zoom transitions → opacity crossfade | Loading spinners and progress |
+| Parallax scrolling | Slide/scale/zoom transitions → opacity cross-fade | Loading spinners and progress |
 | Autoplaying video, GIFs, looping decoration | Smooth scrolling → instant jump | Instant state changes (hover color, focus ring) |
 | Spinning, large-scale movement across the screen | Auto-rotating carousels → start paused | Brief functional feedback (button press) |
 
 ## Autoplay and timed UI
 
-- **Visible controls on anything that moves on its own** (2.2.2). Anything moving, blinking or updating on its own for more than 5 seconds needs a visible pause or stop control, muted looping hero videos included.
+- **Visible controls on anything that runs on its own** (2.2.2). Moving, blinking or scrolling content that lasts more than 5 seconds needs a pause, stop or hide control, muted looping hero videos included. Auto-updating content needs one however long it runs, and a frequency control satisfies it.
 - **Explicit dismissal over timers.** Auto-dismissal suits low-stakes confirmations and nothing else. A toast carrying an action, an error or information the user may need stays until dismissed.
 - **Pause on attention.** Where a toast must time out, give it at least 5 seconds, and pause the timer while it is hovered or focused.
 - **Never put critical information only in a timed element.** A vanished toast with the only link to an undo action is data loss on a schedule.
